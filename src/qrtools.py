@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Authors:
 #   David Green <david4dev@gmail.com>
