@@ -42,7 +42,9 @@ class QR(object):
             return ('http://' + re.compile(
                 r'^http://', re.IGNORECASE
             ).sub('', data))
-        elif data_lower.startswith(u"https://"):
+#        elif data_lower.startswith(u"https://"):
+        # Use https as standard.
+        else:
             return ('https://' + re.compile(
                 r'^https://', re.IGNORECASE
             ).sub('', data))
@@ -133,11 +135,23 @@ class QR(object):
             return self.__class__.data_encode[self.data_type](self.data).encode('utf-8')
 
     def get_tmp_file(self):
-        return os.path.join(
-            self.directory,
-            # filename is hash of data
-            hashlib.sha256(self.data_to_string()).hexdigest() + '.png'
-        )
+        if type(self.data) is tuple and type(self.data[0]) is tuple:
+            return os.path.join(
+                self.directory,
+                hashlib.sha256(self.data[0][0]).hexdigest() + '.png'
+            )
+        elif type(self.data) is tuple:
+            return os.path.join(
+                self.directory,
+                hashlib.sha256(self.data[0]).hexdigest() + '.png'
+            )
+        else:
+
+            return os.path.join(
+                self.directory,
+                # filename is hash of data
+                hashlib.sha256(self.data_to_string()).hexdigest() + '.png'
+            )
 
     def encode(self, filename=None):
         self.filename = filename or self.get_tmp_file()
