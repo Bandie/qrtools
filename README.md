@@ -5,6 +5,9 @@ qrtools
 
 qrtools is a suite of tools for handling [QR codes](http://www.qrcode.com/en/index.html).
 
+It works with Qt5 and Python2.
+
+
 ###2. Dependencies
 
 This module requires the ZBar Bar Code Reader, which may be obtained from [here](http://zbar.sourceforge.net/).
