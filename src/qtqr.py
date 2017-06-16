@@ -450,14 +450,16 @@ class MainWindow(QtWidgets.QMainWindow):
             'Save QRCode', 
             filter='PNG Images (*.png);; All Files (*.*)'
             )
-        if fn:
-            if not fn.toLower().endsWith(u".png"):
-                fn += u".png"
-            self.qrcode.pixmap().save(fn)
+        fname = fn[0]
+        if fname:
+            if not fname.lower().endswith(u".png"):
+                fname += u".png"
+            
+            self.qrcode.pixmap().save(fname)
             if NOTIFY:
                 n = pynotify.Notification(
                     unicode("Save QR Code"),
-                    unicode("QR Code succesfully saved to %s") % fn,
+                    unicode("QR Code succesfully saved to %s") % fname,
                     "qtqr"
                     )
                 n.show()
@@ -465,26 +467,29 @@ class MainWindow(QtWidgets.QMainWindow):
                QtWidgets.QMessageBox.information(
                     self, 
                     unicode('Save QRCode'),
-                    unicode('QRCode succesfully saved to <b>%s</b>.') % fn
+                    unicode('QRCode succesfully saved to <b>%s</b>.') % fname
                     )
 
     def decodeFile(self, fn=None):
         if not fn:
-            fn = unicode(QtWidgets.QFileDialog.getOpenFileName(
+            fn = QtWidgets.QFileDialog.getOpenFileName(
                 self,
                 'Open QRCode',
                 filter='Images (*.png *.jpg);; All Files (*.*)'
                 )
-            )
-        if os.path.isfile(fn):
-            qr = QR(filename=fn)
+            fname = fn[0]
+        else:
+            fname = fn 
+
+        if os.path.isfile(fname):
+            qr = QR(filename=fname)
             if qr.decode():
                 self.showInfo(qr)
             else:
                 QtWidgets.QMessageBox.information(
                     self,
                     'Decode File',
-                    unicode('No QRCode could be found in file: <b>%s</b>.') % fn
+                    unicode('No QRCode could be found in file: <b>%s</b>.') % fname
                 )
 #        else:
 #            QtWidgets.QMessageBox.information(
@@ -675,7 +680,7 @@ class VideoDevices(QtWidgets.QDialog):
             self.videoDevices.append(vd)
 
         self.setWindowTitle(self.tr('Decode from Webcam'))
-        self.cameraIcon = QtWidgets.QIcon.fromTheme("camera")
+        self.cameraIcon = QtGui.QIcon.fromTheme("camera")
         self.icon = QtWidgets.QLabel()
         self.icon.setPixmap(self.cameraIcon.pixmap(64,64).scaled(64,64))
         self.videoDevice = QtWidgets.QComboBox()
